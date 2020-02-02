@@ -1,2 +1,2 @@
-# camera_detector
+# prject_full_configuration_opencv_3
  
