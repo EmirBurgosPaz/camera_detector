@@ -21,29 +21,29 @@ int main(int argc, char** argv)
 
     //Se inicializa la camara del sistema
     VideoCapture webCam;
-
+    //Se finaliza si no se detecta la camara
     if (!webCam.open(0))
         return 0;
-    //Se finaliza si se deja de detectar la camara
     for (;;)
     {
         //Creamos los tipos necesarios para que openCV pueda interactuar con la camara
         Mat originalFrame, detecctionFrame;
         //Se setea camara en el fromato correcto para poder interactuar con el
         webCam >> originalFrame;
-        
+        //Si no se detecta nada, se finaliza el metodo
         if (originalFrame.empty()) break; 
         //Se aplica el metodo de susbtraccion a las imagnes y se guarda em otra.
         pBackSub->apply(originalFrame, detecctionFrame);
-        //Metodo para tener los dos tracks de la camara en una misma ventana
-        rectangle(originalFrame, cv::Point(10, 2), cv::Point(100, 20),
-            cv::Scalar(255, 255, 255), -1);
-        //mostramos la camara y la deteccion
+        //Mostramos la camara y la deteccion
         imshow("Camara", originalFrame);
-
+        //Mostramos en una ventana aprte el movimiento que detecta la camara
         imshow("Presiona w para finalizar", detecctionFrame);
-
-        if (waitKey(1) == 'w') break;  
+        //Al presioanr la tecla ESC se cierra la ventana
+        
+        if (waitKey(1) == 27) { 
+            break;
+        }
+           
     }
 
     return 0;
