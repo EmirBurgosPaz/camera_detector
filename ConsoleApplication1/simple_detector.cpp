@@ -13,24 +13,36 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+    //Creamos un consturctor para el backgroud substactor
     Ptr<BackgroundSubtractor> pBackSub;
+    //Creamos que tipo de background substactor se va a usar
+    //pBackSub = createBackgroundSubtractorKNN();
     pBackSub = createBackgroundSubtractorMOG2();
-    VideoCapture cap;
 
-    if (!cap.open(0))
+    //Se inicializa la camara del sistema
+    VideoCapture webCam;
+
+    if (!webCam.open(0))
         return 0;
+    //Se finaliza si se deja de detectar la camara
     for (;;)
     {
-        Mat frame, fgMask;
-        cap >> frame;
-        if (frame.empty()) break; 
-
-        pBackSub->apply(frame, fgMask);
-
-        rectangle(frame, cv::Point(10, 2), cv::Point(100, 20),
+        //Creamos los tipos necesarios para que openCV pueda interactuar con la camara
+        Mat originalFrame, detecctionFrame;
+        //Se setea camara en el fromato correcto para poder interactuar con el
+        webCam >> originalFrame;
+        
+        if (originalFrame.empty()) break; 
+        //Se aplica el metodo de susbtraccion a las imagnes y se guarda em otra.
+        pBackSub->apply(originalFrame, detecctionFrame);
+        //Metodo para tener los dos tracks de la camara en una misma ventana
+        rectangle(originalFrame, cv::Point(10, 2), cv::Point(100, 20),
             cv::Scalar(255, 255, 255), -1);
-        imshow("Camara", frame);
-        imshow("Presiona w para finalizar", fgMask);
+        //mostramos la camara y la deteccion
+        imshow("Camara", originalFrame);
+
+        imshow("Presiona w para finalizar", detecctionFrame);
+
         if (waitKey(1) == 'w') break;  
     }
 
